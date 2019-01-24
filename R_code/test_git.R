@@ -27,7 +27,7 @@ pred <- predict(model, x_test)
 pred <- round(pred, 0)
 
 ## compare with real answer
-compare <- cbind(pred, y_test, abs(pred-y_test))
+compare <- cbind(pred, y_test, abs(pred-y_test))s
 colnames(compare) <- c("pred", "answer", "loss")
 compare
 
