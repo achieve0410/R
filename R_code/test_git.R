@@ -34,3 +34,6 @@ compare
 ## calculate RMSE
 RMSE <- sqrt( sum( ( pred-y_test )^2 )  / nrow(compare) )
 RMSE
+
+
+## Is this right? ##
