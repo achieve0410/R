@@ -186,7 +186,7 @@ lm_loss_avg
 rm(list=ls())
 
 ## read csv file for model
-m_score <- read.csv("driving_score_180ea.csv")
+m_score <- read.csv("driving_score_virtual_rep.csv")
 
 ## read csv file for data
 d_score <- read.csv("Tmap_data_4col.csv")
@@ -225,7 +225,7 @@ RMSE
 rm(list=ls())
 
 ## read csv file
-d_score <- read.csv("cluster_virtual_4except.csv")
+d_score <- read.csv("driving_score_virtual_rep.csv")
 
 ## regression
 mod1 <- lm(result ~., data = d_score)
@@ -238,16 +238,15 @@ answer <- d_score[, "result"]
 compl <- d_score[, "compliance"]
 accel <- d_score[, "acceleration"]
 decel <- d_score[, "deceleration"]
-clust <- d_score[, "cluster"]
 
 ## create model
-prediction <- compl * coef(mod1)[2] + accel * coef(mod1)[3] + decel * coef(mod1)[4] + clust * coef(mod1)[5] + coef(mod1)[1]
+prediction <- compl * coef(mod1)[2] + accel * coef(mod1)[3] + decel * coef(mod1)[4] + coef(mod1)[1]
 prediction <- round(prediction, 0)
 
 ## compare with real answer
 compare <- cbind(prediction, answer, abs(prediction-answer))
-compare <- cbind(compl, accel, decel, clust, compare)
-colnames(compare) <- c("compl", "accel", "decel", "clust", "pred", "answer", "loss")
+compare <- cbind(compl, accel, decel, compare)
+colnames(compare) <- c("compl", "accel", "decel", "pred", "answer", "loss")
 compare
 
 ## calculate RMSE

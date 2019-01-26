@@ -63,7 +63,7 @@ library(caret)
 rm(list=ls())
 
 ## read csv file
-d_score <- read.csv("driving_score_virtual.csv")
+d_score <- read.csv("driving_score_virtual_rep.csv")
 
 temp_loss <- c() # loss for each fold
 final_loss <- c() # mean of temp_loss for each fold
