@@ -63,12 +63,14 @@ library(caret)
 rm(list=ls())
 
 ## read csv file
-d_score <- read.csv("driving_score_virtual_rep.csv")
+d_score <- read.csv("cluster_new.csv")
+
+head(d_score)
 
 temp_loss <- c() # loss for each fold
 final_loss <- c() # mean of temp_loss for each fold
 
-for( i in 1:100 ) {
+for( i in 1:10 ) {
   
   ## create folds , 10-fold Cross Validation
   fld <- createFolds(d_score$result, k=10)

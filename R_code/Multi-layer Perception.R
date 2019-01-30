@@ -323,7 +323,7 @@ use_session_with_seed(1, disable_parallel_cpu = FALSE)
 m_score <- read.csv("cluster_origin.csv")
 
 ## read csv file for data
-d_score <- read.csv("cluster_virtual.csv")
+d_score <- read.csv("cluster_new.csv")
 
 x_train <- as.matrix(m_score[, -4])
 y_train <- as.matrix(m_score[, 4])
@@ -358,17 +358,17 @@ fit = model %>%
   fit(
     x = x_train,
     y = y_train,
-    batch_size = 128,
+    batch_size = 256,
     epochs = 3000
   )
 
 # Training and evaluation
-model %>% evaluate(x_test, y_test, verbose = 0)
+model %>% evaluate(x_test, y_test, verbose = 1)
 
 # print predicted value
 pred = model %>% predict(x_test)
-result <- cbind(y_test, pred, pred-y_test)
-colnames(result) <- c("result", "pred", "loss")
+result <- cbind(x_train[,], pred, y_test, pred-y_test)
+colnames(compare) <- c("compl","accel","decel","clust_cr","clust_ar","clust_dr","pred", "answer", "loss")
 result
 
 ## calculate RMSE

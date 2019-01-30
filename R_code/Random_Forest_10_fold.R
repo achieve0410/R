@@ -10,7 +10,7 @@ library(caret)
 rm(list=ls())
 
 ## read csv file
-d_score <- read.csv("driving_score_180ea.csv")
+d_score <- read.csv("cluster_origin.csv")
 
 ## create folds , 10-fold Cross Validation
 fld <- createFolds(d_score$result, k=10)
@@ -18,7 +18,7 @@ fld <- createFolds(d_score$result, k=10)
 temp_loss <- c() # temp loss for each fold
 final_loss <- c() # final loss
 
-for( i in 1:100 ) {
+for( i in 1:10 ) {
   temp_loss <- c()
   for( j in 1:10 ) {
     
