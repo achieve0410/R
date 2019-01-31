@@ -1,6 +1,8 @@
-
+install.packages("keras")
+library(keras)
+install_keras(method = "conda")
 #######################################################################################
-
+?install_keras
 rm(list=ls())
 library(keras)
 library(MASS)
@@ -367,8 +369,8 @@ model %>% evaluate(x_test, y_test, verbose = 1)
 
 # print predicted value
 pred = model %>% predict(x_test)
-result <- cbind(x_train[,], pred, y_test, pred-y_test)
-colnames(compare) <- c("compl","accel","decel","clust_cr","clust_ar","clust_dr","pred", "answer", "loss")
+result <- cbind(x_test[,], pred, y_test, pred-y_test)
+colnames(result) <- c("compl","accel","decel","clust_cr","clust_ar","clust_dr","pred", "answer", "loss")
 result
 
 ## calculate RMSE
