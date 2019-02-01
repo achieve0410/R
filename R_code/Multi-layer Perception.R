@@ -1,6 +1,4 @@
-install.packages("keras")
-library(keras)
-install_keras(method = "conda")
+
 #######################################################################################
 ?install_keras
 rm(list=ls())
@@ -322,10 +320,10 @@ library(MASS)
 use_session_with_seed(1, disable_parallel_cpu = FALSE)
 
 ## read csv file for model
-m_score <- read.csv("cluster_origin.csv")
+m_score <- read.csv("cluster_origin_10.csv")
 
 ## read csv file for data
-d_score <- read.csv("cluster_new.csv")
+d_score <- read.csv("cluster_tmap.csv")
 
 x_train <- as.matrix(m_score[, -4])
 y_train <- as.matrix(m_score[, 4])
@@ -336,13 +334,13 @@ y_test <- as.matrix(d_score[, 4])
 model = keras_model_sequential()
 model %>%
   layer_dense(input_shape = ncol(x_train), units = 128, activation = "relu") %>%
-  layer_dropout(rate = 0.05) %>%
+  layer_dropout(rate = 0.1) %>%
   layer_dense(units = 128, activation = "relu") %>%
-  layer_dropout(rate = 0.05) %>%
+  layer_dropout(rate = 0.1) %>%
   layer_dense(units = 64, activation = "relu") %>%
-  layer_dropout(rate = 0.05) %>%
+  layer_dropout(rate = 0.1) %>%
   layer_dense(units = 32, activation = "relu") %>%
-  layer_dropout(rate = 0.05) %>%
+  layer_dropout(rate = 0.1) %>%
   layer_dense(units = 16, activation = "relu") %>%
   layer_dense(units = 1)
 
@@ -370,7 +368,7 @@ model %>% evaluate(x_test, y_test, verbose = 1)
 # print predicted value
 pred = model %>% predict(x_test)
 result <- cbind(x_test[,], pred, y_test, pred-y_test)
-colnames(result) <- c("compl","accel","decel","clust_cr","clust_ar","clust_dr","pred", "answer", "loss")
+colnames(result) <- c("compl","accel","decel","clust_cr","clust_ar","clust_dr","clust_car","clust_cdr","clust_adr","pred", "answer", "loss")
 result
 
 ## calculate RMSE
