@@ -371,8 +371,10 @@ model %>% evaluate(x_test, y_test, verbose = 1)
 # print predicted value
 pred = model %>% predict(x_test)
 result <- cbind(x_test[,], pred, y_test, pred-y_test)
-colnames(result) <- c("compl","accel","decel","clust_cr","clust_ar","clust_dr","clust_car","clust_cdr","clust_adr","pred", "answer", "loss")
+colnames(result) <- c("compl","accel","decel","pred", "answer", "loss")
 result
+
+write.csv(result, "4col_149ea_virtual.csv")
 
 ## calculate RMSE
 RMSE <- sqrt( sum( ( pred-y_test )^2 )  / nrow(result) )
