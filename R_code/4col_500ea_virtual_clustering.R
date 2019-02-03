@@ -10,9 +10,9 @@ library("NbClust")
 # plot(temp)
 
 #m_data <- read.csv("driving_score_virtual_rep.csv")
-m_data <- read.csv("origin_pm3_750ea.csv")
+m_data <- read.csv("origin_pm2_500ea.csv")
 
-plot(m_data)
+#plot(m_data)
 
 head(m_data)
 dim(m_data)
@@ -21,6 +21,9 @@ v_data <- scale(m_data[, c(-2, -3)]) ## result & compliance
 t_data <- scale(m_data[, c(-1, -3)]) ## result & acceleration
 s_data <- scale(m_data[, c(-1, -2)]) ## result & deceleration
 
+k_data <- scale(m_data[, -3]) ## result & compliance & acceleration
+o_data <- scale(m_data[, -2]) ## result & compliance & deceleration
+u_data <- scale(m_data[, -1]) ## result & acceleration & deceleration
 
 cr_nbclust <- NbClust(v_data, distance = "euclidean",
                       min.nc = 2, max.nc = 20, 
@@ -32,37 +35,53 @@ dr_nbclust <- NbClust(s_data, distance = "euclidean",
                       min.nc = 2, max.nc = 20, 
                       method = "kmeans")
 
-#cr_a <- cr_nbclust$Best.partition
-#ar_a <- ar_nbclust$Best.partition
-#dr_a <- dr_nbclust$Best.partition
-
-## compliance & result clustering result
-#rst1 <- kmeans(n_data, centers=5, iter.max = 1000, nstart = 1, algorithm = c("Hartigan-Wong", "Lloyd", "Forgy", "MacQueen"))
-#rst1
+car_nbclust <- NbClust(k_data, distance = "euclidean",
+                      min.nc = 2, max.nc = 20, 
+                      method = "kmeans")
+cdr_nbclust <- NbClust(o_data, distance = "euclidean",
+                      min.nc = 2, max.nc = 20, 
+                      method = "kmeans")
+adr_nbclust <- NbClust(u_data, distance = "euclidean",
+                      min.nc = 2, max.nc = 20, 
+                      method = "kmeans")
 
 ## compliance & result clustering result
 rst2 <- kmeans(v_data, centers=2, iter.max = 1000, nstart = 2, algorithm = c("Hartigan-Wong", "Lloyd", "Forgy", "MacQueen"))
-rst2
+
 
 ## acceleration & result clustering result
-rst3 <- kmeans(t_data, centers=19, iter.max = 1000, nstart = 2, algorithm = c("Hartigan-Wong", "Lloyd", "Forgy", "MacQueen"))
-rst3
+rst3 <- kmeans(t_data, centers=4, iter.max = 1000, nstart = 2, algorithm = c("Hartigan-Wong", "Lloyd", "Forgy", "MacQueen"))
+
 
 ## deceleration & result clustering result
-rst4 <- kmeans(s_data, centers=2, iter.max = 1000, nstart = 2, algorithm = c("Hartigan-Wong", "Lloyd", "Forgy", "MacQueen"))
-rst4
+rst4 <- kmeans(s_data, centers=18, iter.max = 1000, nstart = 2, algorithm = c("Hartigan-Wong", "Lloyd", "Forgy", "MacQueen"))
 
-#clust1 <- rst1[1]
+
+## compliance & result clustering result
+rst5 <- kmeans(k_data, centers=2, iter.max = 1000, nstart = 2, algorithm = c("Hartigan-Wong", "Lloyd", "Forgy", "MacQueen"))
+
+
+## acceleration & result clustering result
+rst6 <- kmeans(o_data, centers=20, iter.max = 1000, nstart = 2, algorithm = c("Hartigan-Wong", "Lloyd", "Forgy", "MacQueen"))
+
+
+## deceleration & result clustering result
+rst7 <- kmeans(u_data, centers=2, iter.max = 1000, nstart = 2, algorithm = c("Hartigan-Wong", "Lloyd", "Forgy", "MacQueen"))
+
+
 clust2 <- rst2[1]
 clust3 <- rst3[1]
 clust4 <- rst4[1]
+clust5 <- rst5[1]
+clust6 <- rst6[1]
+clust7 <- rst7[1]
 
-#rsult <- cbind(m_data, clust1, clust2, clust3, clust4)
-rsult <- cbind(m_data, clust2, clust3, clust4)
 
-write.csv(rsult, "cluster_origin_pm3.csv")
+rsult <- cbind(m_data, clust2, clust3, clust4, clust5, clust6, clust7)
 
-origin <- read.csv("cluster_origin_pm3.csv")
+write.csv(rsult, "cluster_origin_pm2.csv")
+
+origin <- read.csv("cluster_origin_pm2.csv")
 
 head(origin)
 dim(origin)
@@ -76,28 +95,46 @@ rm(list=ls())
 require(class)
 
 ## Preparing training data set
-train_data <- read.csv("cluster_origin_pm3.csv")
+train_data <- read.csv("cluster_origin_pm2.csv")
 
 head(train_data)
 
 
 ## for cr cluster
-tr_x3 <- train_data[, -c(4:7)]
+tr_x6 <- train_data[, -c(4:10)]
 
 ## for ar cluster
-tr_x2 <- train_data[, -c(4:7)]
+tr_x5 <- train_data[, -c(4:10)]
 
 ## for dr cluster
-tr_x1 <- train_data[, -c(4:7)]
+tr_x4 <- train_data[, -c(4:10)]
+
+## for car cluster
+tr_x3 <- train_data[, -c(4:10)]
+
+## for cdr cluster
+tr_x2 <- train_data[, -c(4:10)]
+
+## for adr cluster
+tr_x1 <- train_data[, -c(4:10)]
 
 ## cluster_cr
-tr_y3 <- train_data[, 5]
+tr_y6 <- train_data[, 5]
 
 ## cluster_ar
-tr_y2 <- train_data[, 6]
+tr_y5 <- train_data[, 6]
 
 ## cluster_dr
-tr_y1 <- train_data[, 7]
+tr_y4 <- train_data[, 7]
+
+## cluster_car
+tr_y3 <- train_data[, 8]
+
+## cluster_cdr
+tr_y2 <- train_data[, 9]
+
+## cluster_adr
+tr_y1 <- train_data[, 10]
 
 
 ## Preparing Tmap data set - 15ea, k=3
@@ -105,7 +142,7 @@ test1_data <- read.csv("Tmap_data.csv")
 ts1 <- test1_data[, -4]
 
 ## Preparing Virtual data set - 182 , k=13
-test2_data <- read.csv("driving_score_180ea_modify.csv")
+test2_data <- read.csv("driving_score_180ea_modify2.csv")
 ts2 <- test2_data[, -4]
 
 ## Preparing new data set - 13 , k=3
@@ -115,57 +152,75 @@ ts3 <- test3_data[, -4]
 ## Classification Tmap
 
 ## Classification Tmap - cluster cr
-cluster3 <- knn(train = tr_x3, test = ts1, cl = tr_y3, k=3, prob=TRUE)
-cluster3
+cluster6 <- knn(train = tr_x6, test = ts1, cl = tr_y6, k=3, prob=TRUE)
 
 ## Classification Tmap - cluster ar
-cluster2 <- knn(train = tr_x2, test = ts1, cl = tr_y2, k=3, prob=TRUE)
-cluster2
+cluster5 <- knn(train = tr_x5, test = ts1, cl = tr_y5, k=3, prob=TRUE)
 
 ## Classification Tmap - cluster dr
-cluster1 <- knn(train = tr_x1, test = ts1, cl = tr_y1, k=3, prob=TRUE)
-cluster1
+cluster4 <- knn(train = tr_x4, test = ts1, cl = tr_y4, k=3, prob=TRUE)
 
-tmap <- cbind(test1_data, cluster3, cluster2, cluster1)
+## Classification Tmap - cluster car
+cluster3 <- knn(train = tr_x3, test = ts1, cl = tr_y3, k=3, prob=TRUE)
+
+## Classification Tmap - cluster cdr
+cluster2 <- knn(train = tr_x2, test = ts1, cl = tr_y2, k=3, prob=TRUE)
+
+## Classification Tmap - cluster adr
+cluster1 <- knn(train = tr_x1, test = ts1, cl = tr_y1, k=3, prob=TRUE)
+
+tmap <- cbind(test1_data, cluster6, cluster5, cluster4, cluster3, cluster2, cluster1)
 
 
 ## Classification Origin
 
 ## Classification virtual - cluster cr
-cluster3 <- knn(train = tr_x3, test = ts2, cl = tr_y3, k=12, prob=TRUE)
-cluster3
+cluster6 <- knn(train = tr_x6, test = ts2, cl = tr_y6, k=11, prob=TRUE)
 
 ## Classification virtual - cluster ar
-cluster2 <- knn(train = tr_x2, test = ts2, cl = tr_y2, k=12, prob=TRUE)
-cluster2
+cluster5 <- knn(train = tr_x5, test = ts2, cl = tr_y5, k=11, prob=TRUE)
 
 ## Classification virtual - cluster dr
-cluster1 <- knn(train = tr_x1, test = ts2, cl = tr_y1, k=12, prob=TRUE)
-cluster1
+cluster4 <- knn(train = tr_x4, test = ts2, cl = tr_y4, k=11, prob=TRUE)
 
-virtual <- cbind(test2_data, cluster3, cluster2, cluster1)
+## Classification virtual - cluster car
+cluster3 <- knn(train = tr_x3, test = ts2, cl = tr_y3, k=11, prob=TRUE)
+
+## Classification virtual - cluster cdr
+cluster2 <- knn(train = tr_x2, test = ts2, cl = tr_y2, k=11, prob=TRUE)
+
+## Classification virtual - cluster adr
+cluster1 <- knn(train = tr_x1, test = ts2, cl = tr_y1, k=11, prob=TRUE)
+
+virtual <- cbind(test2_data, cluster6, cluster5, cluster4, cluster3, cluster2, cluster1)
 
 
 ## Classification new
 
 ## Classification new - cluster cr
-cluster3 <- knn(train = tr_x3, test = ts3, cl = tr_y3, k=3, prob=TRUE)
-cluster3
+cluster6 <- knn(train = tr_x6, test = ts3, cl = tr_y6, k=3, prob=TRUE)
 
 ## Classification new - cluster ar
-cluster2 <- knn(train = tr_x2, test = ts3, cl = tr_y2, k=3, prob=TRUE)
-cluster2
+cluster5 <- knn(train = tr_x5, test = ts3, cl = tr_y5, k=3, prob=TRUE)
 
 ## Classification new - cluster dr
+cluster4 <- knn(train = tr_x4, test = ts3, cl = tr_y4, k=3, prob=TRUE)
+
+## Classification new - cluster car
+cluster3 <- knn(train = tr_x3, test = ts3, cl = tr_y3, k=3, prob=TRUE)
+
+## Classification new - cluster cdr
+cluster2 <- knn(train = tr_x2, test = ts3, cl = tr_y2, k=3, prob=TRUE)
+
+## Classification new - cluster adr
 cluster1 <- knn(train = tr_x1, test = ts3, cl = tr_y1, k=3, prob=TRUE)
-cluster1
 
-new <- cbind(test3_data, cluster3, cluster2, cluster1)
+new <- cbind(test3_data, cluster6, cluster5, cluster4, cluster3, cluster2, cluster1)
 
 
-write.csv(tmap, "cluster_tmap_pm3.csv")
-write.csv(virtual, "cluster_virtual_pm3.csv")
-write.csv(new, "cluster_new_pm3.csv")
+write.csv(tmap, "cluster_tmap_pm2.csv")
+write.csv(virtual, "cluster_virtual_pm2.csv")
+write.csv(new, "cluster_new_pm2.csv")
 
 ##############################################################################################################################
 
@@ -175,10 +230,10 @@ write.csv(new, "cluster_new_pm3.csv")
 
 rm(list=ls())
 
-origin <- read.csv("cluster_origin_pm3.csv")                         # 2000,  7
-tmap <- read.csv("cluster_tmap_pm3.csv")                             # 15,    7
-virtual <- read.csv("cluster_virtual_pm3.csv")                       # 182,   7
-new <- read.csv("cluster_new_pm3.csv")                               # 12,    7
+origin <- read.csv("cluster_origin_pm2.csv")                         # 2000,  7
+tmap <- read.csv("cluster_tmap_pm2.csv")                             # 15,    7
+virtual <- read.csv("cluster_virtual_pm2.csv")                       # 182,   7
+new <- read.csv("cluster_new_pm2.csv")                               # 12,    7
 
 ## regression
 mod1 <- lm(result ~., data = origin)
@@ -224,13 +279,13 @@ rm(list=ls())
 
 library(randomForest)
 
-origin <- read.csv("cluster_origin_149.csv")                         # 2000,  7
-tmap <- read.csv("cluster_tmap_149.csv")                             # 15,    7
-virtual <- read.csv("cluster_virtual_149.csv")                       # 182,   7
-new <- read.csv("cluster_new_149.csv")                               # 12,    7
+origin <- read.csv("cluster_origin_pm2.csv")                         # 2000,  7
+tmap <- read.csv("cluster_tmap_pm2.csv")                             # 15,    7
+virtual <- read.csv("cluster_virtual_pm2.csv")                       # 182,   7
+new <- read.csv("cluster_new_pm2.csv")                               # 12,    7
 
 ds.train <- origin[,]
-ds.test <- new[,]
+ds.test <- virtual[,]
 
 d_score.rf <- randomForest(result ~ ., data=ds.train, ntree = 5000)
 d_score.rf
@@ -258,15 +313,15 @@ rm(list=ls())
 
 library(e1071)
 
-origin <- read.csv("cluster_origin_149.csv")                         # 2000,  7
-tmap <- read.csv("cluster_tmap_149.csv")                             # 15,    7
-virtual <- read.csv("cluster_virtual_149.csv")                       # 182,   7
-new <- read.csv("cluster_new_149.csv")                               # 12,    7
+origin <- read.csv("cluster_origin_pm2.csv")                         # 2000,  7
+tmap <- read.csv("cluster_tmap_pm2.csv")                             # 15,    7
+virtual <- read.csv("cluster_virtual_pm2.csv")                       # 182,   7
+new <- read.csv("cluster_new_pm2.csv")                               # 12,    7
 
 x_train <- origin[, -4]
 y_train <- origin[, 4]
-x_test <- new[, -4]
-y_test <- new[, 4]
+x_test <- virtual[, -4]
+y_test <- virtual[, 4]
 
 # training with train data
 #model <- svm(x_train, y_train, type = "nu-regression")
@@ -279,7 +334,7 @@ pred <- round(pred, 1)
 
 ## compare with real answer
 compare <- cbind(x_test[,], pred, y_test, abs(pred-y_test))
-colnames(compare) <- c("compl","accel","decel","clust_cr","clust_ar","clust_dr","pred", "answer", "loss")
+colnames(compare) <- c("compl","accel","decel","clust_cr","clust_ar","clust_dr","clust_car","clust_cdr","clust_adr","pred", "answer", "loss")
 compare
 
 ## calculate RMSE

@@ -361,7 +361,7 @@ fit = model %>%
   fit(
     x = x_train,
     y = y_train,
-    batch_size = 256,
+    batch_size = 128,
     epochs = 3000
   )
 
@@ -374,7 +374,7 @@ result <- cbind(x_test[,], pred, y_test, pred-y_test)
 colnames(result) <- c("compl","accel","decel","pred", "answer", "loss")
 result
 
-write.csv(result, "4col_149ea_virtual.csv")
+write.csv(result, "4col_137ea_virtual.csv")
 
 ## calculate RMSE
 RMSE <- sqrt( sum( ( pred-y_test )^2 )  / nrow(result) )
