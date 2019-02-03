@@ -10,7 +10,7 @@ library("NbClust")
 # plot(temp)
 
 #m_data <- read.csv("driving_score_virtual_rep.csv")
-m_data <- read.csv("data_origin_149.csv")
+m_data <- read.csv("origin_pm3_750ea.csv")
 
 plot(m_data)
 
@@ -41,11 +41,11 @@ dr_nbclust <- NbClust(s_data, distance = "euclidean",
 #rst1
 
 ## compliance & result clustering result
-rst2 <- kmeans(v_data, centers=18, iter.max = 1000, nstart = 2, algorithm = c("Hartigan-Wong", "Lloyd", "Forgy", "MacQueen"))
+rst2 <- kmeans(v_data, centers=2, iter.max = 1000, nstart = 2, algorithm = c("Hartigan-Wong", "Lloyd", "Forgy", "MacQueen"))
 rst2
 
 ## acceleration & result clustering result
-rst3 <- kmeans(t_data, centers=4, iter.max = 1000, nstart = 2, algorithm = c("Hartigan-Wong", "Lloyd", "Forgy", "MacQueen"))
+rst3 <- kmeans(t_data, centers=19, iter.max = 1000, nstart = 2, algorithm = c("Hartigan-Wong", "Lloyd", "Forgy", "MacQueen"))
 rst3
 
 ## deceleration & result clustering result
@@ -60,9 +60,9 @@ clust4 <- rst4[1]
 #rsult <- cbind(m_data, clust1, clust2, clust3, clust4)
 rsult <- cbind(m_data, clust2, clust3, clust4)
 
-write.csv(rsult, "cluster_origin_149.csv")
+write.csv(rsult, "cluster_origin_pm3.csv")
 
-origin <- read.csv("cluster_origin_149.csv")
+origin <- read.csv("cluster_origin_pm3.csv")
 
 head(origin)
 dim(origin)
@@ -76,7 +76,7 @@ rm(list=ls())
 require(class)
 
 ## Preparing training data set
-train_data <- read.csv("cluster_origin_149.csv")
+train_data <- read.csv("cluster_origin_pm3.csv")
 
 head(train_data)
 
@@ -105,7 +105,7 @@ test1_data <- read.csv("Tmap_data.csv")
 ts1 <- test1_data[, -4]
 
 ## Preparing Virtual data set - 182 , k=13
-test2_data <- read.csv("driving_score_180ea.csv")
+test2_data <- read.csv("driving_score_180ea_modify.csv")
 ts2 <- test2_data[, -4]
 
 ## Preparing new data set - 13 , k=3
@@ -132,15 +132,15 @@ tmap <- cbind(test1_data, cluster3, cluster2, cluster1)
 ## Classification Origin
 
 ## Classification virtual - cluster cr
-cluster3 <- knn(train = tr_x3, test = ts2, cl = tr_y3, k=13, prob=TRUE)
+cluster3 <- knn(train = tr_x3, test = ts2, cl = tr_y3, k=12, prob=TRUE)
 cluster3
 
 ## Classification virtual - cluster ar
-cluster2 <- knn(train = tr_x2, test = ts2, cl = tr_y2, k=13, prob=TRUE)
+cluster2 <- knn(train = tr_x2, test = ts2, cl = tr_y2, k=12, prob=TRUE)
 cluster2
 
 ## Classification virtual - cluster dr
-cluster1 <- knn(train = tr_x1, test = ts2, cl = tr_y1, k=13, prob=TRUE)
+cluster1 <- knn(train = tr_x1, test = ts2, cl = tr_y1, k=12, prob=TRUE)
 cluster1
 
 virtual <- cbind(test2_data, cluster3, cluster2, cluster1)
@@ -163,9 +163,9 @@ cluster1
 new <- cbind(test3_data, cluster3, cluster2, cluster1)
 
 
-write.csv(tmap, "cluster_tmap_149.csv")
-write.csv(virtual, "cluster_virtual_149.csv")
-write.csv(new, "cluster_new_149.csv")
+write.csv(tmap, "cluster_tmap_pm3.csv")
+write.csv(virtual, "cluster_virtual_pm3.csv")
+write.csv(new, "cluster_new_pm3.csv")
 
 ##############################################################################################################################
 
@@ -175,10 +175,10 @@ write.csv(new, "cluster_new_149.csv")
 
 rm(list=ls())
 
-origin <- read.csv("cluster_origin_149.csv")                         # 2000,  7
-tmap <- read.csv("cluster_tmap_149.csv")                             # 15,    7
-virtual <- read.csv("cluster_virtual_149.csv")                       # 182,   7
-new <- read.csv("cluster_new_149.csv")                               # 12,    7
+origin <- read.csv("cluster_origin_pm3.csv")                         # 2000,  7
+tmap <- read.csv("cluster_tmap_pm3.csv")                             # 15,    7
+virtual <- read.csv("cluster_virtual_pm3.csv")                       # 182,   7
+new <- read.csv("cluster_new_pm3.csv")                               # 12,    7
 
 ## regression
 mod1 <- lm(result ~., data = origin)
