@@ -58,7 +58,7 @@ rst4 <- kmeans(s_data, centers=18, iter.max = 1000, nstart = 2, algorithm = c("H
 
 
 ## compliance & result clustering result
-rst5 <- kmeans(k_data, centers=2, iter.max = 1000, nstart = 2, algorithm = c("Hartigan-Wong", "Lloyd", "Forgy", "MacQueen"))
+rst5 <- kmeans(k_data, centers=3, iter.max = 1000, nstart = 2, algorithm = c("Hartigan-Wong", "Lloyd", "Forgy", "MacQueen"))
 
 
 ## acceleration & result clustering result

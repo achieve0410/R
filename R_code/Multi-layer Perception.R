@@ -320,7 +320,7 @@ library(MASS)
 use_session_with_seed(1, disable_parallel_cpu = FALSE)
 
 ## read csv file for model
-m_score <- read.csv("driving_score_180ea_modify2.csv")
+m_score <- read.csv("driving_score_180ea.csv")
 
 ## read csv file for data
 d_score <- read.csv("tmp_data.csv")
