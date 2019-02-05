@@ -10,9 +10,21 @@ library("NbClust")
 # plot(temp)
 
 #m_data <- read.csv("driving_score_virtual_rep.csv")
-m_data <- read.csv("driving_score_137.csv")
+m_data <- read.csv("driving_score_180ea.csv")
+head(m_data)
+num <- c()
 
-plot(m_data)
+for( i in 1:nrow(m_data) ) {
+  num[ i ] = 0
+}
+
+for( i in 1:nrow(m_data) ) {
+  num[ m_data[i, 4] ] = num[ m_data[i, 4] ] + 1
+}
+
+num
+
+plot(x = m_data$result, y = num, type = "h")
 
 head(m_data)
 dim(m_data)

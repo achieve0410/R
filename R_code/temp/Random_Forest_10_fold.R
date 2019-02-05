@@ -18,11 +18,11 @@ fld <- createFolds(d_score$result, k=10)
 temp_loss <- c() # temp loss for each fold
 
 for( i in 1:10 ) {
-    
-    ds.train <- d_score[-fld[[i]], ]
-    ds.test <- d_score[fld[[i]], ]
-    
-    d_score.rf <- randomForest(result ~ ., data=ds.train, ntree = 5000)
+  
+  ds.train <- d_score[-fld[[i]], ]
+  ds.test <- d_score[fld[[i]], ]
+  
+  d_score.rf <- randomForest(result ~ ., data=ds.train, ntree = 5000)
     
     d_score.pred <- predict(d_score.rf, ds.test)
     d_score.pred <- round(d_score.pred, 0)

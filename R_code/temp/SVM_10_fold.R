@@ -18,11 +18,11 @@ fld <- createFolds(d_score$result, k=10)
 temp_loss <- c() # loss for each fold
 
 for( i in 1:10 ) {
-    
-    x_train <- d_score[-fld[[i]], -4]
-    y_train <- d_score[-fld[[i]], 4]
-    x_test <- d_score[fld[[i]], -4]
-    y_test <- d_score[fld[[i]], 4]
+  
+  x_train <- d_score[-fld[[i]], -4]
+  y_train <- d_score[-fld[[i]], 4]
+  x_test <- d_score[fld[[i]], -4]
+  y_test <- d_score[fld[[i]], 4]
     
     # training with train data
     model <- svm(x_train, y_train, type = "nu-regression")
