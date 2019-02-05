@@ -14,17 +14,16 @@ m_data <- read.csv("driving_score_180ea.csv")
 head(m_data)
 num <- c()
 
-for( i in 1:nrow(m_data) ) {
+for( i in 1:100) {
   num[ i ] = 0
 }
 
 for( i in 1:nrow(m_data) ) {
   num[ m_data[i, 4] ] = num[ m_data[i, 4] ] + 1
 }
-
 num
 
-plot(x = m_data$result, y = num, type = "h")
+plot(x = 1:100, y = num, type = "h", xlab = "result", ylab = "num")
 
 head(m_data)
 dim(m_data)
