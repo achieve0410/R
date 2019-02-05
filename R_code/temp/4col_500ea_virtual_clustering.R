@@ -5,14 +5,14 @@ rm(list=ls())
 
 library("NbClust")
 
-# temp <- read.csv("driving_score_180ea.csv")
+# temp <- read.csv("driving_score_480ea.csv")
 #
 # plot(temp)
 
 #m_data <- read.csv("driving_score_virtual_rep.csv")
-m_data <- read.csv("driving_score_180ea.csv")
+m_data <- read.csv("driving_score_121.csv")
 
-#plot(m_data)
+plot(m_data)
 
 head(m_data)
 dim(m_data)
@@ -27,16 +27,16 @@ n_data <- scale(m_data[, -4]) ## compliance & acceleration & deceleration
 #u_data <- scale(m_data[, -1]) ## result & acceleration & deceleration
 
 ca_nbclust <- NbClust(v_data, distance = "manhattan",
-                      min.nc = 2, max.nc = 10, 
+                      min.nc = 2, max.nc = 15, 
                       method = "kmeans")
 cd_nbclust <- NbClust(t_data, distance = "manhattan",
-                      min.nc = 2, max.nc = 10, 
+                      min.nc = 2, max.nc = 15, 
                       method = "kmeans")
 ad_nbclust <- NbClust(s_data, distance = "manhattan",
-                      min.nc = 2, max.nc = 10, 
+                      min.nc = 2, max.nc = 15, 
                       method = "kmeans")
 cad_nbclust <- NbClust(n_data, distance = "manhattan",
-                       min.nc = 2, max.nc = 10, 
+                       min.nc = 2, max.nc = 15, 
                        method = "kmeans")
 
 #car_nbclust <- NbClust(k_data, distance = "euclidean",
@@ -50,7 +50,7 @@ cad_nbclust <- NbClust(n_data, distance = "manhattan",
 #                      method = "kmeans")
 
 ## compliance & acceleration clustering result
-rst2 <- kmeans(v_data, centers=10, iter.max = 1000, nstart = 2, algorithm = c("Hartigan-Wong", "Lloyd", "Forgy", "MacQueen"))
+rst2 <- kmeans(v_data, centers=15, iter.max = 1000, nstart = 2, algorithm = c("Hartigan-Wong", "Lloyd", "Forgy", "MacQueen"))
 
 
 ## compliance & deceleration clustering result
@@ -58,7 +58,7 @@ rst3 <- kmeans(t_data, centers=2, iter.max = 1000, nstart = 2, algorithm = c("Ha
 
 
 ## acceleration & deceleration clustering result
-rst4 <- kmeans(s_data, centers=9, iter.max = 1000, nstart = 2, algorithm = c("Hartigan-Wong", "Lloyd", "Forgy", "MacQueen"))
+rst4 <- kmeans(s_data, centers=2, iter.max = 1000, nstart = 2, algorithm = c("Hartigan-Wong", "Lloyd", "Forgy", "MacQueen"))
 
 
 ## compliance & acceleration & deceleration clustering result
@@ -158,7 +158,7 @@ test1_data <- read.csv("Tmap_data.csv")
 ts1 <- test1_data[, -4]
 
 ## Preparing Virtual data set - 121 , k=11
-test2_data <- read.csv("driving_score_137.csv")
+test2_data <- read.csv("driving_score_121.csv")
 ts2 <- test2_data[, -4]
 
 ## Preparing new data set - 13 , k=3
@@ -249,10 +249,10 @@ write.csv(new, "cluster_new_4.csv")
 
 rm(list=ls())
 
-origin <- read.csv("cluster_origin_2.csv")                         # 2000,  7
-tmap <- read.csv("cluster_tmap_2.csv")                             # 15,    7
-virtual <- read.csv("cluster_virtual_2.csv")                       # 182,   7
-new <- read.csv("cluster_new_2.csv")                               # 12,    7
+origin <- read.csv("cluster_origin_4.csv")                         # 2000,  7
+tmap <- read.csv("cluster_tmap_4.csv")                             # 15,    7
+virtual <- read.csv("cluster_virtual_4.csv")                       # 182,   7
+new <- read.csv("cluster_new_4.csv")                               # 12,    7
 
 ## regression
 mod1 <- lm(result ~., data = origin)
@@ -261,14 +261,14 @@ mod1 <- lm(result ~., data = origin)
 summary(mod1)
 
 ## setting data
-answer <- new[, "result"]
-compl <- new[, "compl"]
-accel <- new[, "accel"]
-decel <- new[, "decel"]
-clust3 <- new[, "cluster_ca"]
-clust2 <- new[, "cluster_cd"]
-clust1 <- new[, "cluster_ad"]
-clust0 <- new[, "cluster_cad"]
+answer <- origin[, "result"]
+compl <- origin[, "compl"]
+accel <- origin[, "accel"]
+decel <- origin[, "decel"]
+clust3 <- origin[, "cluster_ca"]
+clust2 <- origin[, "cluster_cd"]
+clust1 <- origin[, "cluster_ad"]
+clust0 <- origin[, "cluster_cad"]
 
 ## create model
 #prediction <- compl * coef(mod1)[2] + accel * coef(mod1)[3] + decel * coef(mod1)[4] + clust3 * coef(mod1)[5] +
@@ -299,13 +299,13 @@ rm(list=ls())
 
 library(randomForest)
 
-origin <- read.csv("cluster_origin_2.csv")                         # 2000,  7
-tmap <- read.csv("cluster_tmap_2.csv")                             # 15,    7
-virtual <- read.csv("cluster_virtual_2.csv")                       # 182,   7
-new <- read.csv("cluster_new_2.csv")                               # 12,    7
+origin <- read.csv("cluster_origin_4.csv")                         # 2000,  7
+tmap <- read.csv("cluster_tmap_4.csv")                             # 15,    7
+virtual <- read.csv("cluster_virtual_4.csv")                       # 182,   7
+new <- read.csv("cluster_new_4.csv")                               # 12,    7
 
 ds.train <- origin[,]
-ds.test <- origin[,]
+ds.test <- tmap[,]
 
 d_score.rf <- randomForest(result ~ ., data=ds.train, ntree = 5000)
 d_score.rf
@@ -333,15 +333,15 @@ rm(list=ls())
 
 library(e1071)
 
-origin <- read.csv("cluster_origin_2.csv")                         # 2000,  7
-tmap <- read.csv("cluster_tmap_2.csv")                             # 15,    7
-virtual <- read.csv("cluster_virtual_2.csv")                       # 182,   7
-new <- read.csv("cluster_new_2.csv")                               # 12,    7
+origin <- read.csv("cluster_origin_4.csv")                         # 2000,  7
+tmap <- read.csv("cluster_tmap_4.csv")                             # 15,    7
+virtual <- read.csv("cluster_virtual_4.csv")                       # 182,   7
+new <- read.csv("cluster_new_4.csv")                               # 12,    7
 
 x_train <- origin[, -4]
 y_train <- origin[, 4]
-x_test <- origin[, -4]
-y_test <- origin[, 4]
+x_test <- new[, -4]
+y_test <- new[, 4]
 
 # training with train data
 #model <- svm(x_train, y_train, type = "nu-regression")
