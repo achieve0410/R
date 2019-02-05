@@ -10,7 +10,7 @@ library("NbClust")
 # plot(temp)
 
 #m_data <- read.csv("driving_score_virtual_rep.csv")
-m_data <- read.csv("driving_score_121.csv")
+m_data <- read.csv("driving_score_137.csv")
 
 plot(m_data)
 
