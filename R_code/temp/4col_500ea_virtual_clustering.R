@@ -5,7 +5,7 @@ rm(list=ls())
 
 library("NbClust")
 
-# temp <- read.csv("driving_score_480ea.csv")
+# temp <- read.csv("driving_score_180ea.csv")
 #
 # plot(temp)
 
@@ -99,9 +99,9 @@ clust5 <- rst5[1]
 #rsult <- cbind(m_data, clust2, clust3, clust4, clust5, clust6, clust7)
 rsult <- cbind(m_data, clust2, clust3, clust4, clust5)
 
-write.csv(rsult, "cluster_origin_4.csv")
+write.csv(rsult, "cluster_origin_1.csv")
 
-origin <- read.csv("cluster_origin_4.csv")
+origin <- read.csv("cluster_origin_1.csv")
 
 head(origin)
 dim(origin)
@@ -115,7 +115,7 @@ rm(list=ls())
 require(class)
 
 ## Preparing training data set
-train_data <- read.csv("cluster_origin_4.csv")
+train_data <- read.csv("cluster_origin_1.csv")
 
 head(train_data)
 
@@ -248,9 +248,9 @@ cluster3 <- knn(train = tr_x3, test = ts3, cl = tr_y3, k=3, prob=TRUE)
 new <- cbind(test3_data, cluster6, cluster5, cluster4, cluster3)
 
 
-write.csv(tmap, "cluster_tmap_4.csv")
-write.csv(virtual, "cluster_virtual_4.csv")
-write.csv(new, "cluster_new_4.csv")
+write.csv(tmap, "cluster_tmap_1.csv")
+write.csv(virtual, "cluster_virtual_1.csv")
+write.csv(new, "cluster_new_1.csv")
 
 ##############################################################################################################################
 
@@ -260,10 +260,10 @@ write.csv(new, "cluster_new_4.csv")
 
 rm(list=ls())
 
-origin <- read.csv("cluster_origin_4.csv")                         # 2000,  7
-tmap <- read.csv("cluster_tmap_4.csv")                             # 15,    7
-virtual <- read.csv("cluster_virtual_4.csv")                       # 182,   7
-new <- read.csv("cluster_new_4.csv")                               # 12,    7
+origin <- read.csv("cluster_origin_1.csv")                         # 2000,  7
+tmap <- read.csv("cluster_tmap_1.csv")                             # 15,    7
+virtual <- read.csv("cluster_virtual_1.csv")                       # 182,   7
+new <- read.csv("cluster_new_1.csv")                               # 12,    7
 
 ## regression
 mod1 <- lm(result ~., data = origin)
@@ -296,6 +296,8 @@ compare <- cbind(compl, accel, decel, clust3, clust2, clust1, clust0, compare)
 colnames(compare) <- c("compl", "accel", "decel", "clust_ca", "clust_cd", "clust_ad", "clust_cad", "pred", "answer", "loss")
 compare
 
+write.csv(compare, "180_DSI.csv")
+
 ## calculate RMSE
 RMSE <- sqrt( sum((prediction-answer)^2)/nrow(compare) )
 RMSE
@@ -310,13 +312,13 @@ rm(list=ls())
 
 library(randomForest)
 
-origin <- read.csv("cluster_origin_4.csv")                         # 2000,  7
-tmap <- read.csv("cluster_tmap_4.csv")                             # 15,    7
-virtual <- read.csv("cluster_virtual_4.csv")                       # 182,   7
-new <- read.csv("cluster_new_4.csv")                               # 12,    7
+origin <- read.csv("cluster_origin_1.csv")                         # 2000,  7
+tmap <- read.csv("cluster_tmap_1.csv")                             # 15,    7
+virtual <- read.csv("cluster_virtual_1.csv")                       # 182,   7
+new <- read.csv("cluster_new_1.csv")                               # 12,    7
 
 ds.train <- origin[,]
-ds.test <- tmap[,]
+ds.test <- origin[,]
 
 d_score.rf <- randomForest(result ~ ., data=ds.train, ntree = 5000)
 d_score.rf
@@ -329,6 +331,8 @@ compare <- cbind(d_score.pred, ds.test[, "result"], abs(d_score.pred-ds.test[,"r
 compare <- cbind(ds.test[,c(1:3,5:8)], compare)
 colnames(compare) <- c("compl","accel","decel","clust_ca","clust_cd","clust_ad", "clust_cad", "pred", "answer", "loss")
 compare
+
+write.csv(compare, "180_RF.csv")
 
 ## calculate RMSE
 RMSE <- sqrt( sum( ( d_score.pred-ds.test[, "result"] )^2 )  / nrow(compare) )
@@ -344,15 +348,15 @@ rm(list=ls())
 
 library(e1071)
 
-origin <- read.csv("cluster_origin_4.csv")                         # 2000,  7
-tmap <- read.csv("cluster_tmap_4.csv")                             # 15,    7
-virtual <- read.csv("cluster_virtual_4.csv")                       # 182,   7
-new <- read.csv("cluster_new_4.csv")                               # 12,    7
+origin <- read.csv("cluster_origin_1.csv")                         # 2000,  7
+tmap <- read.csv("cluster_tmap_1.csv")                             # 15,    7
+virtual <- read.csv("cluster_virtual_1.csv")                       # 182,   7
+new <- read.csv("cluster_new_1.csv")                               # 12,    7
 
 x_train <- origin[, -4]
 y_train <- origin[, 4]
-x_test <- new[, -4]
-y_test <- new[, 4]
+x_test <- origin[, -4]
+y_test <- origin[, 4]
 
 # training with train data
 #model <- svm(x_train, y_train, type = "nu-regression")
@@ -367,6 +371,8 @@ pred <- round(pred, 1)
 compare <- cbind(x_test[,], pred, y_test, abs(pred-y_test))
 colnames(compare) <- c("compl","accel","decel","clust_ca","clust_cd","clust_ad", "clust_cad", "pred", "answer", "loss")
 compare
+
+write.csv(compare, "180_SVM.csv")
 
 ## calculate RMSE
 RMSE <- sqrt( sum( ( pred-y_test )^2 )  / nrow(compare) )
