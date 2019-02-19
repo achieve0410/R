@@ -317,13 +317,15 @@ rm(list=ls())
 library(keras)
 library(MASS)
 
-use_session_with_seed(1, disable_parallel_cpu = FALSE)
+?use_session_with_seed
+
+use_session_with_seed(2, disable_parallel_cpu = FALSE, disable_gpu = FALSE)
 
 ## read csv file for model
-m_score <- read.csv("driving_score_180ea.csv")
+m_score <- read.csv("cluster_virtual_2.csv")
 
 ## read csv file for data
-d_score <- read.csv("tmp_data.csv")
+d_score <- read.csv("cluster_tmp_2.csv")
 
 dim(m_score)
 dim(d_score)
