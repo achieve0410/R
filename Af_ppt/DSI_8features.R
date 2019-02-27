@@ -1,17 +1,12 @@
 
 ##############################################################################################################################
 
-## model = origin // data = tmap & virtual // goal = data's result prediction
-
 ## DSI
 
 rm(list=ls())
 
 origin <- read.csv("cluster_fil11.csv")                         # 120,   8
 new <- read.csv("cluster_new_fil11.csv")                        # 12,    8
-
-head(origin)
-head(new)
 
 ## regression
 mod1 <- lm(result ~., data = origin)
@@ -42,8 +37,6 @@ compare <- cbind(prediction, answer, abs(prediction-answer))
 compare <- cbind(new[, c(1:7)], compare)
 colnames(compare) <- c("compl", "accel", "decel", "clust_ca", "clust_cd", "clust_ad", "clust_cad", "pred", "result", "loss")
 compare
-
-#write.csv(compare, "121_DSI.csv")
 
 ## calculate RMSE
 RMSE <- sqrt( sum((prediction-answer)^2)/nrow(compare) )
